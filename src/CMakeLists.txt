@@ -20,6 +20,10 @@ add_executable(
 # Add PCP libraries to the build.
 target_link_libraries(${PROJECT_NAME} pcp pcp_pmda boost_program_options)
 
+# Add boost libraries
+find_package(Boost COMPONENTS program_options system REQUIRED)
+target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
+
 # Enable (and stop on) compiler warnings.
 include(CheckCXXCompilerFlag)
 check_cxx_compiler_flag(-Wall   HAVE_WALL)
