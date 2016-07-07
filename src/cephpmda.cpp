@@ -35,9 +35,10 @@ boost::program_options::options_description CephPmda::get_supported_options() co
 {
     using namespace boost::program_options;
     options_description connectionOptions("Ceph connection options");
+    // Change to show "--socket-dir dir" instead of current "--socket-dir arg"
     connectionOptions.add_options()
         ("socket-dir", value<std::string>(), "Ceph admin socket directory");
-    return connectionOptions;
+    return connectionOptions.add(pcp::pmda::get_supported_options());
 }
 
 boost::program_options::options_description CephPmda::get_supported_hidden_options() const
@@ -53,7 +54,7 @@ bool CephPmda::parse_command_line(const int argc, const char * const argv[],
                                           pmdaInterface& interface,
                                           boost::program_options::variables_map &options)
 {
-   // Let the parent implementation do the actually command line parsing.
+   // Let the parent implementation do the actual command line parsing.
     if (!pcp::pmda::parse_command_line(argc, argv, interface, options)) {
         return false; 
     }
