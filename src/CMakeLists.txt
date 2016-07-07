@@ -15,13 +15,14 @@ add_executable(
     ${PROJECT_NAME}.cpp
     cephpmda.cpp
     cephpmda.h
+    cephmetricsource.h
 )
 
 # Add PCP libraries to the build.
-target_link_libraries(${PROJECT_NAME} pcp pcp_pmda boost_program_options)
+target_link_libraries(${PROJECT_NAME} pcp pcp_pmda)
 
 # Add boost libraries
-find_package(Boost COMPONENTS program_options system REQUIRED)
+find_package(Boost COMPONENTS program_options system filesystem REQUIRED)
 target_link_libraries(${PROJECT_NAME} ${Boost_LIBRARIES})
 
 # Enable (and stop on) compiler warnings.

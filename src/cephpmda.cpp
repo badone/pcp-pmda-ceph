@@ -1,3 +1,5 @@
+#include <boost/filesystem.hpp>
+
 #include "cephpmda.h"
 
 CephPmda::CephPmda()
@@ -26,7 +28,7 @@ pcp::metrics_description CephPmda::get_supported_metrics()
     return pmd;
 }
 
-pcp::pmda::fetch_value_result CephPmda::fetch_value(const metric_id & metric )
+pcp::pmda::fetch_value_result CephPmda::fetch_value(const metric_id& metric )
 {
     return pcp::atom(metric.type,0);
 }
@@ -37,7 +39,8 @@ boost::program_options::options_description CephPmda::get_supported_options() co
     options_description connectionOptions("Ceph connection options");
     // Change to show "--socket-dir dir" instead of current "--socket-dir arg"
     connectionOptions.add_options()
-        ("socket-dir", value<std::string>(), "Ceph admin socket directory");
+        ("socket-dir", value<std::string>()->default_value("/var/run/ceph/")
+         PCP_CPP_BOOST_PO_VALUE_NAME("dir"),"Ceph admin socket directory");
     return connectionOptions.add(pcp::pmda::get_supported_options());
 }
 
@@ -50,21 +53,33 @@ boost::program_options::options_description CephPmda::get_supported_hidden_optio
     return options;
 }
 
-bool CephPmda::parse_command_line(const int argc, const char * const argv[],
-                                          pmdaInterface& interface,
-                                          boost::program_options::variables_map &options)
+bool CephPmda::parse_command_line(const int argc, const char* const argv[],
+                                  pmdaInterface& interface,
+                                  boost::program_options::variables_map& options)
 {
    // Let the parent implementation do the actual command line parsing.
     if (!pcp::pmda::parse_command_line(argc, argv, interface, options)) {
         return false; 
     }
+    socket_dir = options["socket-dir"].as<std::string>();
 
     non_pmda_mode = ((options.count("no-pmda") > 0) && (options["no-pmda"].as<bool>()));
     return true;
 }
 
-void CephPmda::initialize_pmda(pmdaInterface &interface)
+void CephPmda::initialize_pmda(pmdaInterface& interface)
 {
+    using namespace boost::filesystem;
+    path p(socket_dir);
+    if(exists(p) && is_directory(p)) {
+        for(auto dir_iter : directory_iterator(p)) {
+            if(dir_iter.status().type() == socket_file && dir_iter.path().extension() == ".asok") {
+                metric_sources.push_back(std::make_unique<CephMetricSource>(dir_iter.path().stem().string(),
+                                                                            dir_iter.path().string()));
+            }
+        }
+    }
+
     // If testing in non-PMDA mode, just wait for input then throw.
     if (non_pmda_mode) {
         std::cout << "Running in non-PMDA mode; outputting to: "

@@ -1,5 +1,5 @@
-#ifndef ADD_H
-#define ADD_H
+#ifndef CEPHPMDA_H
+#define CEPHPMDA_H
 
 #pragma once
 
@@ -7,6 +7,8 @@
 
 #include <pcp-cpp/pmda.hpp>
 #include <pcp-cpp/atom.hpp>
+
+#include "cephmetricsource.h"
 
 /**
  * @brief Ceph PMDA
@@ -27,19 +29,21 @@ protected:
 
     virtual pcp::metrics_description get_supported_metrics() override;
 
-    virtual pcp::pmda::fetch_value_result fetch_value(const metric_id &) override;
+    virtual pcp::pmda::fetch_value_result fetch_value(const metric_id& id) override;
 
     virtual boost::program_options::options_description get_supported_options() const override;
 
     virtual boost::program_options::options_description get_supported_hidden_options() const override;
 
-    virtual bool parse_command_line(const int argc, const char * const argv[],
+    virtual bool parse_command_line(const int argc, const char* const argv[],
                                               pmdaInterface& interface,
-                                              boost::program_options::variables_map &options) override;
+                                              boost::program_options::variables_map& options) override;
 
     virtual void initialize_pmda(pmdaInterface &interface) override;
 
 private:
     bool non_pmda_mode = false;
+    std::string socket_dir;
+    std::vector<std::unique_ptr<CephMetricSource>> metric_sources;
 };
-#endif
+#endif // CEPHPMDA_H
