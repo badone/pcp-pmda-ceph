@@ -7,7 +7,7 @@ class CephMetricSource {
 
 public:
     CephMetricSource() = delete;
-    CephMetricSource(std::string name, std::string sock) : name(name), socket(sock) {}
+    CephMetricSource(const std::string name, const std::string sock) : name(name), socket(sock) {}
 
     std::string get_name() const { return name; }
     std::string get_socket() const { return socket; }

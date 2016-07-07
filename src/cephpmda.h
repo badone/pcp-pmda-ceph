@@ -1,8 +1,6 @@
 #ifndef CEPHPMDA_H
 #define CEPHPMDA_H
 
-#pragma once
-
 #define PCP_CPP_SKIP_PCP_PMDA_INSTANCE_DEFINITION
 
 #include <pcp-cpp/pmda.hpp>

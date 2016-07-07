@@ -88,11 +88,7 @@ void CephPmda::initialize_pmda(pmdaInterface& interface)
         pmdaOpenLog(&interface);
         std::getchar();
         std::cout << "Stopping..." << std::endl;
-        #ifdef PM_ERR_FAULT // PM_ERR_FAULT added in PCP 3.6.0.
         throw pcp::exception(PM_ERR_FAULT);
-        #else
-        throw pcp::exception(PM_ERR_GENERIC);
-        #endif
     }
 
     // Let the parent implementation initialize the rest of the PMDA.
