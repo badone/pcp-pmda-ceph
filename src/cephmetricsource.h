@@ -8,9 +8,6 @@
 #include "common/admin_socket.h"
 #include "common/admin_socket_client.h"
 
-#include <pcp-cpp/pmda.hpp>
-#include <pcp-cpp/atom.hpp>
-
 class CephMetricSource {
 
 public:

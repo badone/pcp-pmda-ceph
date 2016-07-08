@@ -5,6 +5,9 @@
 
 #include "cephmetricsource.h"
 
+#include <pcp-cpp/pmda.hpp>
+#include <pcp-cpp/atom.hpp>
+
 /**
  * @brief Ceph PMDA
  */
