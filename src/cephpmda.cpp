@@ -74,10 +74,19 @@ void CephPmda::initialize_pmda(pmdaInterface& interface)
     if(exists(p) && is_directory(p)) {
         for(auto dir_iter : directory_iterator(p)) {
             if(dir_iter.status().type() == socket_file && dir_iter.path().extension() == ".asok") {
-                metric_sources.push_back(std::make_unique<CephMetricSource>(dir_iter.path().stem().string(),
-                                                                            dir_iter.path().string()));
+                metric_sources.push_back(std::unique_ptr<CephMetricSource>(
+                                         new CephMetricSource(dir_iter.path().stem().string(),
+                                                              dir_iter.path().string())));
             }
         }
+    }
+
+    for(auto& source : metric_sources) {
+        std::string result;
+        source->ping();
+        cout << source->is_enabled() << '\n';
+        source->get_raw_metrics(result);
+        cout << result << '\n';
     }
 
     // If testing in non-PMDA mode, just wait for input then throw.

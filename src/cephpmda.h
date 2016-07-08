@@ -3,9 +3,6 @@
 
 #define PCP_CPP_SKIP_PCP_PMDA_INSTANCE_DEFINITION
 
-#include <pcp-cpp/pmda.hpp>
-#include <pcp-cpp/atom.hpp>
-
 #include "cephmetricsource.h"
 
 /**
