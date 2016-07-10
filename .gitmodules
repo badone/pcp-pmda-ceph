@@ -1,3 +1,6 @@
 [submodule "pcp-pmda-cpp"]
 	path = src/pcp-pmda-cpp
 	url = https://github.com/pcolby/pcp-pmda-cpp.git
+[submodule "json"]
+	path = src/json
+	url = https://github.com/nlohmann/json.git
