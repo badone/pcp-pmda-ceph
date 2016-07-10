@@ -5,8 +5,10 @@
 // PCP headers, because pcp/config.h sets a number of macros like ULONGLONG_MAX
 // which fool Boost into thinking we're on an unknown, non-standard platform.
 // In this case common/admin_socket.h includes boost headers
+#pragma GCC diagnostic ignored "-Wunused-parameter"
 #include "common/admin_socket.h"
 #include "common/admin_socket_client.h"
+#pragma GCC diagnostic error "-Wunused-parameter"
 
 class CephMetricSource {
 
